@@ -1,0 +1,35 @@
+[
+  {
+    "text": "Navigation",
+    "type": "heading",
+    "translate": "sidebar.heading.HEADER"
+  },
+  {
+    "text": "Dashboard",
+    "sref": "app.table-ngtable-dashboard",
+    "icon": "icon-bar-graph",
+    "translate": "sidebar.nav.DASHBOARD"
+  },
+  {
+    "text": "Slabs",
+    "sref": "#",
+    "icon": "icon-box",
+    "subnav": [
+    ],
+    "translate": "sidebar.nav.component.COMPONENTS"
+  },
+  {
+    "type": "separator"
+  },
+  {
+    "text": "Search",
+    "sref": "#",
+    "icon": "icon-book",
+    "subnav": [
+      {"text": "Inputs",   "sref": "app.form-inputs", "translate": "sidebar.nav.form.INPUT" },
+      {"text": "Validation", "sref": "app.form-validation", "translate": "sidebar.nav.form.VALIDATION" },
+      {"text": "Wizard",     "sref": "app.form-wizard", "translate": "sidebar.nav.form.WIZARD" }
+    ],
+    "translate": "sidebar.nav.form.FORM"
+  }
+]
