@@ -22,7 +22,7 @@ var App = angular.module('singular', ['ngRoute', 'ngAnimate', 'ngStorage', 'ngCo
     // Scope Globals
     // ----------------------------------- 
     $rootScope.app = {
-      name: 'Internet Brands',
+      name: 'Cache Manager',
       description: '',
       year: ((new Date()).getFullYear()),
       viewAnimation: 'ng-fadeInLeft2',
@@ -42,6 +42,7 @@ var App = angular.module('singular', ['ngRoute', 'ngAnimate', 'ngStorage', 'ngCo
         topbar:  'bg-white'
       }
     };
+	console.log($rootScope);
     
     // User information
     $rootScope.user = {
@@ -2078,8 +2079,6 @@ App.controller('SidebarController', ['$rootScope', '$scope', '$location', '$http
 		console.log($rootScope.menuItems);
 		$rootScope.menuItems[selectIndex].text = item.text;
 		console.log($rootScope.menuItems[selectIndex].text);
-		$rootScope.selected = item.text;
-		$rootScope.selectedip = item.ip;
 	}
     }
 
@@ -2813,18 +2812,17 @@ App.directive('vectorMap', function(){
 
 });
 App.controller('AngularSlabTableIBController', AngularSlabTableIBController);
-function AngularSlabTableIBController($scope, $filter, ngTableParams, $http, $stateParams, $sce, $rootScope, flotOptions) {
+function AngularSlabTableIBController($scope, $filter, ngTableParams, $http, $stateParams, $sce, $rootScope) {
   'use strict';
   var vm = this;
 
        var id = $stateParams.slabid;
 
-
-	  vm.lineSeriesPoints = [true, true, true];
-	  vm.lineSeriesLines  = [true, true, true];
-	  vm.chartLineFlotChart       = angular.extend({}, flotOptions['line'], { yaxis: { max: 60 }});
-
+	console.log(id);
+	console.log('STAT ' + id);
 	vm.slabdetails = $rootScope.slabdata['STAT ' + id];
+	console.log($rootScope.slabdata);
+	console.log(vm.slabdetails);
 
 	vm.currentSlabDumpId = "Slab " + id;
 	$scope.currentSlabDumpId = "Slab " + id;
@@ -2934,7 +2932,7 @@ function AngularSlabTableIBController($scope, $filter, ngTableParams, $http, $st
 	}
 
 }
-AngularTableIBController.$inject = ["$scope", "$filter", "ngTableParams", "$http", "$stateParams","sce","$rootScope", "flotOptions"];
+AngularTableIBController.$inject = ["$scope", "$filter", "ngTableParams", "$http", "$stateParams","sce","$rootScope"];
 
 
 App.controller('AngularTableIBController', AngularTableIBController);
@@ -3041,6 +3039,7 @@ function AngularTableIBController($scope, $filter, ngTableParams, $http, flotOpt
 			vm.slabdata[arrItem[0]][fields[0]] = Number(fields[1]);
 			vm.slabdata[arrItem[0]]['name'] = arrItem[0];
 			vm.slabdata[arrItem[0]]['id_num'] = arrItem[0].substring(5);
+		//console.log(vm.slabdata[arrItem[0]].used_chunks);
 		
 			if(fields[0]=="used_chunks") {
 				totalKeys += Number(fields[1]);
@@ -3114,7 +3113,6 @@ function AngularTableSearchController($scope, $filter, ngTableParams, $http, flo
   'use strict';
   var vm = this;
 
-vm.count = 0;
 vm.slabdump = {};
   vm.searchKey = function() {
 	var term = vm.key + "+";
@@ -3136,7 +3134,6 @@ vm.slabdump = {};
 						var arrStat = data.data[key].substring(fstIndex+1,sndIndex).split(';');
 						vm.slabdump[key].size = arrStat[0]; // size of key
 						vm.slabdump[key].time = arrStat[1]; // expiration of key
-						vm.count++;
 					}
 				}
 			});
@@ -3180,28 +3177,9 @@ function AngularTableSettingsController($scope, $filter, ngTableParams, $http, f
 
 	  var vm = this;
 	  vm.$edit = [];
-	  vm.$edit2 = [];
 
           vm.selectJson = $rootScope.selectJson;
 	  vm.tableParams = new ngTableParams({
-              page: 1,            // show first page
-              count: vm.selectJson.length,
-	      sorting: {
-		  name: 'desc'     // initial sorting
-	      }
-	  }, {
-              counts: [],
-	      total: vm.selectJson.length, // length of data
-	      getData: function($defer, params) {
-		  // use build-in angular filter
-		  var orderedData = params.sorting() ?
-			  $filter('orderBy')(vm.selectJson, params.orderBy()) :
-			  vm.selectJson;
-	  
-		  $defer.resolve(orderedData);
-	      }
-	  });
-	  vm.tableParams2 = new ngTableParams({
               page: 1,            // show first page
               count: vm.selectJson.length,
 	      sorting: {
@@ -3275,15 +3253,6 @@ function AngularTableSettingsController($scope, $filter, ngTableParams, $http, f
 		});
 		vm.$edit[vm.selectJson.length-1] = true;
 	}
-	vm.addInstance2 = function() {
-		vm.rules.push({
-			type: '',
-			rule: '',
-			replace: '',
-			order: ''
-		});
-		vm.$edit[vm.selectJson.length-1] = true;
-	}
 
 	vm.save = function($index) {
 		$rootScope.selectJson[$index] = vm.selectJson[$index];
@@ -3295,6 +3264,7 @@ function AngularTableSettingsController($scope, $filter, ngTableParams, $http, f
 	}
 
 	vm.saveChanges = function() {
+		console.log({instances: JSON.stringify($rootScope.selectJson) });
 		$http.post('app/php/saveinstances.php', {instances: JSON.stringify($rootScope.selectJson) }).
 		then(function(response) {
 			// save changes to the sidebar
@@ -3324,13 +3294,6 @@ function AngularTableSettingsController($scope, $filter, ngTableParams, $http, f
 				});
 				$rootScope.menuItems = items;
 		});
-	}
-	vm.saveChanges2 = function() {
-		$http.post('app/php/saverules.php', {instance: $rootScope.selectedip, rules: JSON.stringify(vm.rulesJson) }).
-		then(function(response) {
-			// toast
-		});
-	
 	}
 
 }

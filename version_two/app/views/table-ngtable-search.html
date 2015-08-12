@@ -1,0 +1,56 @@
+<h3>Search
+</h3>
+<div data-ng-controller="AngularTableSearchController as table" class="container-fluid">
+   <div class="panel panel-default">
+      <div class="panel-body">
+         <form method="get" action="/" novalidate="" class="form-horizontal">
+            <fieldset>
+               <div class="form-group">
+                  <label for="input-id-1" class="col-sm-2 control-label">Retrieve</label>
+		  <div class="input-group">
+                        <input type="text" class="form-control" />
+                        <span class="input-group-btn">
+                           <button type="button" class="btn btn-default">Go</button>
+                        </span>
+                  </div>
+               </div>
+		<br/>
+		<div class="form-group">
+                  <label for="input-id-1" class="col-sm-2 control-label">Search</label>
+		  <div class="input-group">
+                        <input type="text" class="form-control" ng-model="table.key" />
+                        <span class="input-group-btn">
+                           <button type="button" class="btn btn-default" ng-click="table.searchKey()">Go</button>
+                        </span>
+                  </div>
+               </div>
+            </fieldset>
+         </form>
+      </div>
+   </div>
+  <div class="panel panel-default">
+      <div class="panel-heading">
+         <button data-ng-click="table.tableParams.sorting({})" class="pull-right btn btn-default btn-sm">Clear sorting</button>
+         <div class="panel-title">Search Results: <span ng-show="table.count>0">{{table.count}} items found.</span></div>
+      </div>
+      <table data-ng-table="table.tableParams" class="table table-bordered table-striped">
+         <tbody>
+            <tr data-ng-repeat-start="(key, value) in table.slabdump">
+                        <td data-title="'key'" sortable="'key'"><a ng-click="table.getValueFromDump(key)">{{value.key}}</a></td>
+                        <td data-title="'Size'" sortable="'size'">{{value.size}}</td>
+                        <td data-title="'Expiration'" sortable="'time'">{{value.time}}</td>
+            </tr>
+	<tr data-ng-repeat-end data-ng-show="value.html">
+		<td colspan="4">
+		<pre ng-bind-html="value.html">
+		</pre>
+		<div class="floatright_container">
+<button type="button" class="mr btn btn-square btn-default" ng-click="table.closeKey(key)">Close</button>
+<button type="button" class="mr btn btn-square btn-danger" ng-click="table.deleteKey(key)">Delete</button>
+		</div>
+		<td>
+	</tr>
+         </tbody>
+      </table>
+   </div> 
+</div>

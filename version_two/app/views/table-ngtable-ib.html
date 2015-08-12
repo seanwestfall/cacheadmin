@@ -1,37 +1,135 @@
 <h3>Dashboard
    <small>Memcached management</small>
 </h3>
-<div data-ng-controller="AngularTableController as table" class="container-fluid">
+<div data-ng-controller="AngularTableIBController as table" class="container-fluid">
    <div class="panel panel-default">
       <div class="panel-heading">
-         <button data-ng-click="table.tableParams.sorting({})" class="pull-right btn btn-default btn-sm">Clear sorting</button>
          <div class="panel-title">Memcached Stats</div>
       </div>
-      <table data-ng-table="table.tableParams" class="table table-bordered table-striped">
+      <table class="table table-bordered table-striped">
          <tbody>
-            <tr data-ng-repeat="user in $data">
-               <td data-title="'Name'" sortable="'name'">{{user.name}}</td>
-               <td data-title="'Age'" sortable="'age'">{{user.age}}</td>
-               <td data-title="'Money'" sortable="'money'">
-                  <span data-ng-class="{ 'plus': user.money &gt;= 0,'minus': user.money &lt; 0 }">{{user.money}}</span>
-               </td>
+            <tr>
+		<td><b class="tipsy-tooltip" title="Current number of bytes used to store items">bytes</b></td><td>{{table.statsdata['bytes']}}</td> 
+		<td><b class="tipsy-tooltip" title="Process id of this server process">pid</b></td><td>{{table.statsdata['pid']}}</td>
             </tr>
+            <tr>
+                <td><b class="tipsy-tooltip" title="Total number of bytes read by this server from network">bytes_read</b></td><td>{{table.statsdata['bytes_read']}}</td>
+                <td><b class="tipsy-tooltip" title="Default size of pointers on the host OS (generally 32 or 64)">pointer_size</b></td><td>{{table.statsdata['pointer_size']}}</td>
+            </tr>
+            <tr>
+                <td><b class="tipsy-tooltip" title="Total number of bytes sent by this server to network">bytes_written</b></td>
+                                        <td>{{table.statsdata['bytes_written']}}</td>
+<td><b class="tipsy-tooltip" title="Accumulated system time for this process (microseconds)">rusage_system_microseconds</b></td>
+                                        <td>{{table.statsdata['rusage_system_microseconds']}}</td>
+            </tr>
+            <tr>
+               <td><b class="tipsy-tooltip" title="Cumulative number of retrieval reqs">cmd_get</b></td>
+                                        <td>{{table.statsdata['cmd_get']}}</td> 
+<td><b class="tipsy-tooltip" title="Accumulated system time for this process (seconds)">rusage_system_seconds</b></td>
+                                        <td>{{table.statsdata['rusage_system_seconds']}}</td>
+            </tr>
+            <tr>
+<td><b class="tipsy-tooltip" title="Cumulative number of storage reqs">cmd_set</b></td>
+                                        <td>{{table.statsdata['cmd_set']}}</td>
+<td><b class="tipsy-tooltip" title="Accumulated user time for this process (microseconds)">rusage_user_microseconds</b></td>
+                                        <td>{{table.statsdata['rusage_user_microseconds']}}</td>
+            </tr>
+<tr>
+<td><b class="tipsy-tooltip" title="Number of connection structures allocated by the server">connection_structures</b></td>
+                                        <td>{{table.statsdata['connection_structures']}}</td>
+<td><b class="tipsy-tooltip" title="Accumulated user time for this process (seconds)">rusage_user_seconds</b></td>
+                                        <td>{{table.statsdata['rusage_user_seconds']}}</td>
+</tr>
+<tr>
+<td><b class="tipsy-tooltip" title="Number of open connections">curr_connections</b></td>
+                                        <td>{{table.statsdata['curr_connections']}}</td>
+<td><b class="tipsy-tooltip" title="Number of worker threads requested.">threads</b></td>
+                                        <td>{{table.statsdata['threads']}}</td>
+</tr>
+<tr>
+<td><b class="tipsy-tooltip" title="Current number of items stored">curr_items</b></td>
+                                        <td>{{table.statsdata['curr_items']}}</td>
+<td><b class="tipsy-tooltip" title="current UNIX time according to the server">time</b></td>
+                                        <td>{{table.statsdata['time']}}</td>
+</tr>
+<tr>
+<td><b class="tipsy-tooltip" title="Number of valid items removed from cache to free memory for new items">evictions</b></td>
+                                        <td>{{table.statsdata['evictions']}}</td>
+<td><b class="tipsy-tooltip" title="Total number of connections opened since the server started running">total_connections</b></td>
+                                        <td>{{table.statsdata['total_connections']}}</td>
+</tr>
+<tr>
+<td><b class="tipsy-tooltip" title="Number of keys that have been requested and found present">get_hits</b></td>
+                                        <td>{{table.statsdata['get_hits']}}</td>
+<td><b class="tipsy-tooltip" title="Total number of items stored since the server startedn">total_items</b></td>
+                                        <td>{{table.statsdata['total_items']}}</td>
+</tr>
+<tr>
+<td><b class="tipsy-tooltip" title="Number of items that have been requested and not found">get_misses</b></td>
+                                        <td>{{table.statsdata['get_misses']}}</td>
+<td><b class="tipsy-tooltip" title="Number of secs since the server started">uptime</b></td>
+                                        <td>{{table.statsdata['uptime']}}</td>
+</tr>
+<tr>
+<td><b class="tipsy-tooltip" title="Number of bytes this server is allowed to use for storage.">limit_maxbytes</b></td>
+                                        <td>{{table.statsdata['limit_maxbytes']}}</td>
+<td><b class="tipsy-tooltip" title="Number of secs since the server started">uptime</b></td>
+                                        <td>{{table.statsdata['uptime']}}</td>
+</tr>
          </tbody>
       </table>
    </div>
-   <div class="panel panel-default">
+
+<div class="row">
+      <div class="col-md-6">
+         <div class="panel panel-transparent">
+            <div class="panel-heading">
+               <div class="panel-title">Cache Size</div>
+            </div>
+            <div class="panel-wrapper">
+               <div class="panel-body">
+                  <flot dataset="table.memory" options="table.chartPieFlotChart"></flot>
+               </div>
+            </div>
+         </div>
+      </div>
+     <div class="col-lg-6">
+         <div class="panel panel-transparent">
+            <div class="panel-heading">
+               <div class="panel-title">Hit and Miss Rates</div>
+            </div>
+            <div class="panel-wrapper">
+               <div class="panel-body">
+                  <flot dataset="table.bar" options="table.chartBarFlotChart"></flot>
+               </div>
+            </div>
+         </div>
+      </div>
+</div>
+
+
+   <div class="panel panel-default" style="overflow-x:scroll">
       <div class="panel-heading">
-         <button data-ng-click="table.tableParams.sorting({})" class="pull-right btn btn-default btn-sm">Clear sorting</button>
+         <button data-ng-click="table.tableParams.sorting({})" class="pull-right btn-sm btn btn-default">Clear sorting</button>
          <div class="panel-title">Slab Details</div>
       </div>
       <table data-ng-table="table.tableParams" class="table table-bordered table-striped">
          <tbody>
-            <tr data-ng-repeat="user in $data">
-               <td data-title="'Name'" sortable="'name'">{{user.name}}</td>
-               <td data-title="'Age'" sortable="'age'">{{user.age}}</td>
-               <td data-title="'Money'" sortable="'money'">
-                  <span data-ng-class="{ 'plus': user.money &gt;= 0,'minus': user.money &lt; 0 }">{{user.money}}</span>
+            <tr ng-repeat="(key, value) in table.slabdata" ng-hide="value.name.substring(0,4)!='STAT'">
+               <td>
+               <a ui-sref="app.table-ngtable-slab({slabid: value.id_num})"-><button type="button" class="mr btn btn-pill-left btn-primary">Dump</button></a>
                </td>
+               <td data-title="'Name'" sortable="'name'">{{value.name}}</td>
+               <td data-title="'chunk_size'" sortable="'chunk_size'">{{value.chunk_size}}</td>
+               <td data-title="'chunks_per_page'" sortable="'chunks_per_page'">
+                  <!--<span data-ng-class="{ 'plus': user.money &gt;= 0,'minus': user.money &lt; 0 }">{{user.money}}</span>-->
+                  {{value.chunks_per_page}}
+               </td>
+               <td data-title="'get_hits'" sortable="'get_hits'">{{value.get_hits}} </td>
+               <td data-title="'mem_requested'" sortable="'mem_requested'">{{value.mem_requested}}</td>
+               <td data-title="'total_chunks'" sortable="'total_chucks'">{{value.total_chunks}}</td>
+               <td data-title="'total_pages'" sortable="'total_pages'">{{value.total_pages}}</td>
+               <td data-title="'used_chunks'" sortable="'used_chunks'">{{value.used_chunks}}</td>
             </tr>
          </tbody>
       </table>
@@ -78,4 +176,284 @@
          </table>
       </div>
    </div>-->
+<div class="row">
+      <div class="col-md-6">
+         <div class="panel panel-transparent">
+            <div class="panel-heading">
+               <div class="panel-title">Items</div>
+            </div>
+            <div class="panel-wrapper">
+               <div class="panel-body">
+                  <flot dataset="table.flotData" options="table.chartPieFlotChart"></flot>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="col-md-6">
+         <div class="panel panel-transparent">
+            <div class="panel-heading">
+               <div class="panel-title">Memory</div>
+            </div>
+            <div class="panel-wrapper">
+               <div class="panel-body">
+                  <flot dataset="table.flotData2" options="table.chartPieFlotChart"></flot>
+               </div>
+            </div>
+         </div>
+      </div>
 </div>
+   <div class="panel panel-default">
+      <div class="panel-heading">
+         <div class="panel-title">Items</div>
+      </div>
+      <div class="panel-wrapper">
+         <div class="panel-body">
+            <div class="row">
+               <div class="col-lg-8">
+                  <flot src="'server/chart/line.json'" options="table.chartLineFlotChart" series="{lines: table.lineSeriesLines, points: table.lineSeriesPoints}"></flot>
+               </div>
+               <div class="col-lg-4">
+                  <p class="lead mt-lg">Toggle Points</p>
+                  <div class="text-center">
+                     <div class="btn-switch btn-switch-primary">
+                        <input type="checkbox" id="input-btn-switch-1" data-ng-model="table.lineSeriesPoints[0]" />
+                        <label for="input-btn-switch-1" class="btn btn-fw btn-primary">
+                           <em class="fa fa-check"></em>
+                           <strong>Serie 1</strong>
+                        </label>
+                     </div>
+                     <div class="btn-switch btn-switch-info">
+                        <input type="checkbox" id="input-btn-switch-2" data-ng-model="table.lineSeriesPoints[1]" />
+                        <label for="input-btn-switch-2" class="btn btn-fw btn-info">
+                           <em class="fa fa-check"></em>
+                           <strong>Serie 2</strong>
+                        </label>
+                     </div>
+                     <div class="btn-switch btn-switch-turquoise">
+                        <input type="checkbox" id="input-btn-switch-3" data-ng-model="table.lineSeriesPoints[2]" />
+                        <label for="input-btn-switch-3" class="btn btn-fw btn-turquoise">
+                           <em class="fa fa-check"></em>
+                           <strong>Serie 3</strong>
+                        </label>
+                     </div>
+                  </div>
+                  <p class="lead mt-lg">Toggle Lines</p>
+                  <div class="text-center">
+                     <div class="btn-switch btn-switch-primary">
+                        <input type="checkbox" id="input-btn-switch-4" data-ng-model="table.lineSeriesLines[0]" />
+                        <label for="input-btn-switch-4" class="btn btn-fw btn-primary">
+                           <em class="fa fa-check"></em>
+                           <strong>Serie 1</strong>
+                        </label>
+                     </div>
+                     <div class="btn-switch btn-switch-info">
+                        <input type="checkbox" id="input-btn-switch-5" data-ng-model="table.lineSeriesLines[1]" />
+                        <label for="input-btn-switch-5" class="btn btn-fw btn-info">
+                           <em class="fa fa-check"></em>
+                           <strong>Serie 2</strong>
+                        </label>
+                     </div>
+                     <div class="btn-switch btn-switch-turquoise">
+                        <input type="checkbox" id="input-btn-switch-6" data-ng-model="table.lineSeriesLines[2]" />
+                        <label for="input-btn-switch-6" class="btn btn-fw btn-turquoise">
+                           <em class="fa fa-check"></em>
+                           <strong>Serie 3</strong>
+                        </label>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div><div class="panel panel-default">
+      <div class="panel-heading">
+         <div class="panel-title">Memory</div>
+      </div>
+      <div class="panel-wrapper">
+         <div class="panel-body">
+            <div class="row">
+               <div class="col-lg-8">
+                  <flot src="'server/chart/line.json'" options="table.chartLineFlotChart" series="{lines: table.lineSeriesLines, points: table.lineSeriesPoints}"></flot>
+               </div>
+               <div class="col-lg-4">
+                  <p class="lead mt-lg">Toggle Points</p>
+                  <div class="text-center">
+                     <div class="btn-switch btn-switch-primary">
+                        <input type="checkbox" id="input-btn-switch-1" data-ng-model="table.lineSeriesPoints[0]" />
+                        <label for="input-btn-switch-1" class="btn btn-fw btn-primary">
+                           <em class="fa fa-check"></em>
+                           <strong>Serie 1</strong>
+                        </label>
+                     </div>
+                     <div class="btn-switch btn-switch-info">
+                        <input type="checkbox" id="input-btn-switch-2" data-ng-model="table.lineSeriesPoints[1]" />
+                        <label for="input-btn-switch-2" class="btn btn-fw btn-info">
+                           <em class="fa fa-check"></em>
+                           <strong>Serie 2</strong>
+                        </label>
+                     </div>
+                     <div class="btn-switch btn-switch-turquoise">
+                        <input type="checkbox" id="input-btn-switch-3" data-ng-model="table.lineSeriesPoints[2]" />
+                        <label for="input-btn-switch-3" class="btn btn-fw btn-turquoise">
+                           <em class="fa fa-check"></em>
+                           <strong>Serie 3</strong>
+                        </label>
+                     </div>
+                  </div>
+                  <p class="lead mt-lg">Toggle Lines</p>
+                  <div class="text-center">
+                     <div class="btn-switch btn-switch-primary">
+                        <input type="checkbox" id="input-btn-switch-4" data-ng-model="table.lineSeriesLines[0]" />
+                        <label for="input-btn-switch-4" class="btn btn-fw btn-primary">
+                           <em class="fa fa-check"></em>
+                           <strong>Serie 1</strong>
+                        </label>
+                     </div>
+                     <div class="btn-switch btn-switch-info">
+                        <input type="checkbox" id="input-btn-switch-5" data-ng-model="table.lineSeriesLines[1]" />
+                        <label for="input-btn-switch-5" class="btn btn-fw btn-info">
+                           <em class="fa fa-check"></em>
+                           <strong>Serie 2</strong>
+                        </label>
+                     </div>
+                     <div class="btn-switch btn-switch-turquoise">
+                        <input type="checkbox" id="input-btn-switch-6" data-ng-model="table.lineSeriesLines[2]" />
+                        <label for="input-btn-switch-6" class="btn btn-fw btn-turquoise">
+                           <em class="fa fa-check"></em>
+                           <strong>Serie 3</strong>
+                        </label>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+<div class="panel panel-default">
+      <div class="panel-heading">
+         <div class="panel-title">Hit and Misses</div>
+      </div>
+      <div class="panel-wrapper">
+         <div class="panel-body">
+            <div class="row">
+               <div class="col-lg-8">
+                  <flot src="'server/chart/line.json'" options="table.chartLineFlotChart" series="{lines: table.lineSeriesLines, points: table.lineSeriesPoints}"></flot>
+               </div>
+               <div class="col-lg-4">
+                  <p class="lead mt-lg">Toggle Points</p>
+                  <div class="text-center">
+                     <div class="btn-switch btn-switch-primary">
+                        <input type="checkbox" id="input-btn-switch-1" data-ng-model="table.lineSeriesPoints[0]" />
+                        <label for="input-btn-switch-1" class="btn btn-fw btn-primary">
+                           <em class="fa fa-check"></em>
+                           <strong>Serie 1</strong>
+                        </label>
+                     </div>
+                     <div class="btn-switch btn-switch-info">
+                        <input type="checkbox" id="input-btn-switch-2" data-ng-model="table.lineSeriesPoints[1]" />
+                        <label for="input-btn-switch-2" class="btn btn-fw btn-info">
+                           <em class="fa fa-check"></em>
+                           <strong>Serie 2</strong>
+                        </label>
+                     </div>
+                     <div class="btn-switch btn-switch-turquoise">
+                        <input type="checkbox" id="input-btn-switch-3" data-ng-model="table.lineSeriesPoints[2]" />
+                        <label for="input-btn-switch-3" class="btn btn-fw btn-turquoise">
+                           <em class="fa fa-check"></em>
+                           <strong>Serie 3</strong>
+                        </label>
+                     </div>
+                  </div>
+                  <p class="lead mt-lg">Toggle Lines</p>
+                  <div class="text-center">
+                     <div class="btn-switch btn-switch-primary">
+                        <input type="checkbox" id="input-btn-switch-4" data-ng-model="table.lineSeriesLines[0]" />
+                        <label for="input-btn-switch-4" class="btn btn-fw btn-primary">
+                           <em class="fa fa-check"></em>
+                           <strong>Serie 1</strong>
+                        </label>
+                     </div>
+                     <div class="btn-switch btn-switch-info">
+                        <input type="checkbox" id="input-btn-switch-5" data-ng-model="table.lineSeriesLines[1]" />
+                        <label for="input-btn-switch-5" class="btn btn-fw btn-info">
+                           <em class="fa fa-check"></em>
+                           <strong>Serie 2</strong>
+                        </label>
+                     </div>
+                     <div class="btn-switch btn-switch-turquoise">
+                        <input type="checkbox" id="input-btn-switch-6" data-ng-model="table.lineSeriesLines[2]" />
+                        <label for="input-btn-switch-6" class="btn btn-fw btn-turquoise">
+                           <em class="fa fa-check"></em>
+                           <strong>Serie 3</strong>
+                        </label>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+<div class="panel panel-default">
+      <div class="panel-heading">
+         <div class="panel-title">Evications</div>
+      </div>
+      <div class="panel-wrapper">
+         <div class="panel-body">
+            <div class="row">
+               <div class="col-lg-8">
+                  <flot src="'server/chart/line.json'" options="table.chartLineFlotChart" series="{lines: table.lineSeriesLines, points: table.lineSeriesPoints}"></flot>
+               </div>
+               <div class="col-lg-4">
+                  <p class="lead mt-lg">Toggle Points</p>
+                  <div class="text-center">
+                     <div class="btn-switch btn-switch-primary">
+                        <input type="checkbox" id="input-btn-switch-1" data-ng-model="table.lineSeriesPoints[0]" />
+                        <label for="input-btn-switch-1" class="btn btn-fw btn-primary">
+                           <em class="fa fa-check"></em>
+                           <strong>Serie 1</strong>
+                        </label>
+                     </div>
+                     <div class="btn-switch btn-switch-info">
+                        <input type="checkbox" id="input-btn-switch-2" data-ng-model="table.lineSeriesPoints[1]" />
+                        <label for="input-btn-switch-2" class="btn btn-fw btn-info">
+                           <em class="fa fa-check"></em>
+                           <strong>Serie 2</strong>
+                        </label>
+                     </div>
+                     <div class="btn-switch btn-switch-turquoise">
+                        <input type="checkbox" id="input-btn-switch-3" data-ng-model="table.lineSeriesPoints[2]" />
+                        <label for="input-btn-switch-3" class="btn btn-fw btn-turquoise">
+                           <em class="fa fa-check"></em>
+                           <strong>Serie 3</strong>
+                        </label>
+                     </div>
+                  </div>
+                  <p class="lead mt-lg">Toggle Lines</p>
+                  <div class="text-center">
+                     <div class="btn-switch btn-switch-primary">
+                        <input type="checkbox" id="input-btn-switch-4" data-ng-model="table.lineSeriesLines[0]" />
+                        <label for="input-btn-switch-4" class="btn btn-fw btn-primary">
+                           <em class="fa fa-check"></em>
+                           <strong>Serie 1</strong>
+                        </label>
+                     </div>
+                     <div class="btn-switch btn-switch-info">
+                        <input type="checkbox" id="input-btn-switch-5" data-ng-model="table.lineSeriesLines[1]" />
+                        <label for="input-btn-switch-5" class="btn btn-fw btn-info">
+                           <em class="fa fa-check"></em>
+                           <strong>Serie 2</strong>
+                        </label>
+                     </div>
+                     <div class="btn-switch btn-switch-turquoise">
+                        <input type="checkbox" id="input-btn-switch-6" data-ng-model="table.lineSeriesLines[2]" />
+                        <label for="input-btn-switch-6" class="btn btn-fw btn-turquoise">
+                           <em class="fa fa-check"></em>
+                           <strong>Serie 3</strong>
+                        </label>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div></div>

@@ -6,7 +6,7 @@
    </div>
    <div class="settings-inner">
       <div class="settings-content">
-         <div class="p">
+         <!--<div class="p">
             <p class="text-muted text-thin">THEMES</p>
             <div class="clearfix mb">
                <div data-ng-repeat="theme in themes" class="pull-left wd-tiny mb">
@@ -23,9 +23,9 @@
                   </div>
                </div>
             </div>
-         </div>
-         <hr/>
-         <div class="p">
+         </div>-->
+         <!--<hr/>-->
+         <!--<div class="p">
             <p class="text-muted text-thin">LAYOUT</p>
             <div class="clearfix">
                <p class="pull-left">Fixed</p>
@@ -54,9 +54,9 @@
                   </label>
                </div>
             </div>
-         </div>
-         <hr/>
-         <div class="p">
+         </div>-->
+         <!--<hr/>-->
+         <!--<div class="p">
             <p class="text-muted text-thin">SIDEBAR</p>
             <div class="clearfix">
                <p class="pull-left">Collapsed</p>
@@ -76,7 +76,31 @@
                   </label>
                </div>
             </div>
-         </div>
+         </div>-->
+	<div class="p">
+            <!--<div class="pull-right">-->
+		<div class="form-group" style="display: inline-block; width: 100%">
+		  <span class="text-muted text-thin"><label for="input-id-1">Set Cron</label></span>
+                  <div class="col-sm-8 pull-right">
+                     <label class="switch">
+                        <input type="checkbox" checked="checked">
+                        <span></span>
+                     </label>
+                  </div>
+               </div>
+            <!--</div>-->
+	</div>
+	<div class="p">
+            <!--<div class="pull-right">-->
+		<div class="form-group" style="display: inline-block">
+		  <span class="text-muted text-thin"><label for="input-id-1">Interval</label></span>
+                  <div class="col-sm-9 pull-right">
+                     <input id="input-id-1" type="text" class="form-control"></input>
+                  </div>
+               </div>
+            <!--</div>-->
+	</div>
+
          <hr/>
          <div class="p">
             <!-- START Language list-->
@@ -94,6 +118,12 @@
             <!-- END Language list    -->
             <p class="text-muted text-thin">LANGUAGE</p>
          </div>
+         <hr/>
+         <div class="p">
+		<div>
+                <a ui-sref="app.table-ngtable-settings"><button type="button" class="mr mb-sm btn btn-default" style="width:100%">Settings</button></a>
+		</div>
+	 </div>
       </div>
    </div>
 </div>

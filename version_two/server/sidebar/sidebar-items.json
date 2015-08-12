@@ -1,5 +1,17 @@
 [
   {
+    "text": "Select",
+    "isselect": true,
+    "sref": "#",
+    "icon": "icon-share",
+    "subnav": [
+    ],
+    "translate": null
+  },
+  {
+    "type": "separator"
+  },
+  {
     "text": "Navigation",
     "type": "heading",
     "translate": "sidebar.heading.HEADER"
@@ -23,13 +35,8 @@
   },
   {
     "text": "Search",
-    "sref": "#",
+    "sref": "app.table-ngtable-search",
     "icon": "icon-book",
-    "subnav": [
-      {"text": "Inputs",   "sref": "app.form-inputs", "translate": "sidebar.nav.form.INPUT" },
-      {"text": "Validation", "sref": "app.form-validation", "translate": "sidebar.nav.form.VALIDATION" },
-      {"text": "Wizard",     "sref": "app.form-wizard", "translate": "sidebar.nav.form.WIZARD" }
-    ],
     "translate": "sidebar.nav.form.FORM"
   }
 ]

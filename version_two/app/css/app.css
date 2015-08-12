@@ -4759,6 +4759,9 @@ a.list-group-item-danger.active:focus {
 .panel-default {
   border-color: #e6e9ee;
 }
+.panel .slabdetails {
+	overflow-x:scroll;
+}
 .panel-default > .panel-heading {
   color: #444444;
   background-color: #ffffff;

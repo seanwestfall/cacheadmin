@@ -1,38 +1,153 @@
-<h3>Dashboard
-   <small>Memcached management</small>
+<h3>Dump
+   <small>{{currentSlabDumpId}}</small>
 </h3>
-<div data-ng-controller="AngularTableController as table" class="container-fluid">
+<div data-ng-controller="AngularSlabTableIBController as table" class="container-fluid">
+
+<div class="panel panel-default">
+<div class="panel-heading">
+<div class="panel-title">Slab Stats</div>
+</div>
+<table class="table table-bordered table-striped">
+<tbody>
+<tr>
+<td><b class="tipsy-tooltip" title="">name</b></td><td>{{table.slabdetails['name']}}</td>
+<td><b class="tipsy-tooltip" title="">id_num</b></td><td>{{table.slabdetails['id_num']}}</td>
+</tr>
+<tr>
+<td><b class="tipsy-tooltip" title="">cas_badval</b></td><td>{{table.slabdetails['cas_badval']}}</td>
+<td><b class="tipsy-tooltip" title="">cas_hits</b></td><td>{{table.slabdetails['cas_hits']}}</td>
+</tr>
+<tr>
+<td><b class="tipsy-tooltip" title="">chunk_size</b></td><td>{{table.slabdetails['chunk_size']}}</td>
+<td><b class="tipsy-tooltip" title="">chunks_per_page</b></td><td>{{table.slabdetails['chunks_per_page']}}</td>
+</tr>
+<tr>
+<td><b class="tipsy-tooltip" title="">cmd_set</b></td><td>{{table.slabdetails['cmd_set']}}</td>
+<td><b class="tipsy-tooltip" title="">decr_hits</b></td><td>{{table.slabdetails['decr_hits']}}</td>
+</tr>
+<tr>
+<td><b class="tipsy-tooltip" title="">delete_hits</b></td><td>{{table.slabdetails['delete_hits']}}</td>
+<td><b class="tipsy-tooltip" title="">free_chunks</b></td><td>{{table.slabdetails['free_chunks']}}</td>
+</tr>
+<tr>
+<td><b class="tipsy-tooltip" title="">free_chunks_end</b></td><td>{{table.slabdetails['free_chunks_end']}}</td>
+<td><b class="tipsy-tooltip" title="">get_hits</b></td><td>{{table.slabdetails['get_hits']}}</td>
+</tr>
+<tr>
+<td><b class="tipsy-tooltip" title="">incr_hits</b></td><td>{{table.slabdetails['incr_hits']}}</td>
+<td><b class="tipsy-tooltip" title="">mem_requested</b></td><td>{{table.slabdetails['mem_requested']}}</td>
+</tr>
+<tr>
+<td><b class="tipsy-tooltip" title="">total_chunks</b></td><td>{{table.slabdetails['total_chunks']}}</td>
+<td><b class="tipsy-tooltip" title="">total_pages</b></td><td>{{table.slabdetails['total_pages']}}</td>
+</tr>
+<tr>
+<td><b class="tipsy-tooltip" title="">touch_hits</b></td><td>{{table.slabdetails['touch_hits']}}</td>
+<td><b class="tipsy-tooltip" title="">used_chunks</b></td><td>{{table.slabdetails['used_chunks']}}</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="row">
+<div class="panel panel-default">
+      <div class="panel-heading">
+         <div class="panel-title">Slab Items</div>
+      </div>
+      <div class="panel-wrapper">
+         <div class="panel-body">
+            <div class="row">
+               <div class="col-lg-8">
+                  <flot src="'server/chart/line.json'" options="table.chartLineFlotChart" series="{lines: table.lineSeriesLines, points: table.lineSeriesLines}"></flot>
+               </div>
+               <div class="col-lg-4">
+                  <p class="lead mt-lg">Toggle Lines</p>
+                  <div class="text-center">
+                     <div class="btn-switch btn-switch-primary">
+                        <input type="checkbox" id="input-btn-switch-4" data-ng-model="table.lineSeriesLines[0]" />
+                        <label for="input-btn-switch-4" class="btn btn-fw btn-primary">
+                           <em class="fa fa-check"></em>
+                           <strong>Serie 1</strong>
+                        </label>
+                     </div>
+                     <div class="btn-switch btn-switch-info">
+                        <input type="checkbox" id="input-btn-switch-5" data-ng-model="table.lineSeriesLines[1]" />
+                        <label for="input-btn-switch-5" class="btn btn-fw btn-info">
+                           <em class="fa fa-check"></em>
+                           <strong>Serie 2</strong>
+                        </label>
+                     </div>
+                     <div class="btn-switch btn-switch-turquoise">
+                        <input type="checkbox" id="input-btn-switch-6" data-ng-model="table.lineSeriesLines[2]" />
+                        <label for="input-btn-switch-6" class="btn btn-fw btn-turquoise">
+                           <em class="fa fa-check"></em>
+                           <strong>Serie 3</strong>
+                        </label>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
    <div class="panel panel-default">
       <div class="panel-heading">
          <button data-ng-click="table.tableParams.sorting({})" class="pull-right btn btn-default btn-sm">Clear sorting</button>
-         <div class="panel-title">Memcached Stats</div>
+         <div class="panel-title">Stats</div>
       </div>
       <table data-ng-table="table.tableParams" class="table table-bordered table-striped">
          <tbody>
-            <tr data-ng-repeat="user in $data">
+                <tr ng-repeat="(key, value) in table.averageKeys">
+                        <td data-title="'name'" sortable="'name'">{{key}}</td>
+                        <td data-title="'counter'" sortable="'counter'">{{value.counter}}</td>
+                        <td data-title="'totale'" sortable="'total'">{{value.total}} B</td>
+                        <td data-title="'average_size'" sortable="'average_size'">{{(value.total/value.counter)}} B</td>
+                </tr>
+         </tbody>
+    <tfoot>
+        <tr>
+            <td class=" text-success text-right" colspan="3"><strong>Total Items:</strong></td>
+            <td colspan="1">{{table.totalOcc}}</td>
+        </tr>
+        <tr>
+            <td class="text-success text-right" colspan="3"><strong>Total Size:</strong></td>
+            <td colspan="1">{{table.totalSize}} B</td>
+        </tr>
+    </tfoot>
+      </table>
+
+         <!--   <tr data-ng-repeat="user in $data">
                <td data-title="'Name'" sortable="'name'">{{user.name}}</td>
                <td data-title="'Age'" sortable="'age'">{{user.age}}</td>
                <td data-title="'Money'" sortable="'money'">
                   <span data-ng-class="{ 'plus': user.money &gt;= 0,'minus': user.money &lt; 0 }">{{user.money}}</span>
                </td>
-            </tr>
+            </tr>-->
          </tbody>
       </table>
    </div>
    <div class="panel panel-default">
       <div class="panel-heading">
-         <button data-ng-click="table.tableParams.sorting({})" class="pull-right btn btn-default btn-sm">Clear sorting</button>
-         <div class="panel-title">Slab Details</div>
+         <button data-ng-click="table.tableParams2.sorting({})" class="pull-right btn btn-default btn-sm">Clear sorting</button>
+         <div class="panel-title">Dump</div>
       </div>
-      <table data-ng-table="table.tableParams" class="table table-bordered table-striped">
+      <table data-ng-table="table.tableParams2" class="table table-bordered table-striped">
          <tbody>
-            <tr data-ng-repeat="user in $data">
-               <td data-title="'Name'" sortable="'name'">{{user.name}}</td>
-               <td data-title="'Age'" sortable="'age'">{{user.age}}</td>
-               <td data-title="'Money'" sortable="'money'">
-                  <span data-ng-class="{ 'plus': user.money &gt;= 0,'minus': user.money &lt; 0 }">{{user.money}}</span>
-               </td>
+            <tr data-ng-repeat-start="(key, value) in table.slabdump">
+                        <td><a ng-click="table.getValueFromDump(key)">{{value.key}}</a></td>
+                        <td data-title="'Size'" sortable="'size'">{{value.size}}</td>
+                        <td data-title="'Expiration'" sortable="'time'">{{value.time}}</td>
             </tr>
+	<tr data-ng-repeat-end data-ng-show="value.html">
+		<td colspan="4">
+		<pre ng-bind-html="value.html">
+		</pre>
+		<div class="floatright_container">
+<button type="button" class="mr btn btn-square btn-default" ng-click="table.closeKey(key)">Close</button>
+<button type="button" class="mr btn btn-square btn-danger" ng-click="table.deleteKey(key)">Delete</button>
+		</div>
+		<td>
+	</tr>
          </tbody>
       </table>
    </div>
