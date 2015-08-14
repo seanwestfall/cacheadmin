@@ -1,6 +1,8 @@
 <?php
-function getStats($host = '127.0.0.1', $port = 11211){
-        $mem = @fsockopen($host, $port);
+function getStats(){
+	$host = $_GET['ip'];
+	$port = $_GET['port'];
+        $mem = @fsockopen($host, (int)$port);
         if($mem === FALSE) return -1;
  
         // retrieve distinct slab

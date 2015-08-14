@@ -1,6 +1,7 @@
 <h3>Settings
 </h3>
 <div data-ng-controller="AngularTableSettingsController as table" class="container-fluid">
+	<toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
    <div class="panel panel-default">
       <div class="panel-heading">
          <button data-ng-click="table.tableParams.sorting({})" class="pull-right btn btn-default btn-sm">Clear sorting</button>
@@ -23,15 +24,16 @@
 			</td>
                         <td data-title="'Default'">
 				<label class="switch">
-                        		<input type="checkbox" checked="checked">
+                        		<input type="checkbox" ng-checked="value.default" ng-model="value.default" ng-change="table.setDefault($index)">
                         		<span></span>
                      		</label>
 			</td>
 			<td data-title="'Actions'">
 				<a ng-if="!table.$edit[$index]" class="btn btn-default btn-xs" ng-click="table.$edit[$index] = true">Edit</a>
 				<a ng-if="!table.$edit[$index]" class="btn btn-default btn-xs" ng-click="table.delete($index)">Delete</a>
+				<a ng-if="!table.$edit2[$index]" class="btn btn-info btn-xs">Check</a>
                 		<a ng-if="table.$edit[$index]" class="btn btn-primary btn-xs" ng-click="table.$edit[$index] = false; table.save($index)">Save</a>
-                		<a ng-if="table.$edit[$index]" class="btn btn-default btn-xs" ng-click="table.$edit[$index] = false">Cancel</a>
+                		<a ng-if="table.$edit[$index]" class="btn btn-default btn-xs" ng-click="table.$edit[$index] = false; table.cancel($index)">Cancel</a>
 			</td>
             </tr>
          </tbody>
@@ -54,7 +56,7 @@
       </div>
       <table data-ng-table="table.tableParams2" class="table table-bordered table-striped">
          <tbody>
-            <tr data-ng-repeat="(key, value) in table.rules">
+            <tr data-ng-repeat="(key, value) in table.rulesJson">
                         <td data-title="'Type'" sortable="'type'">
 				<span ng-if="!table.$edit2[$index]">{{value.type}}</span>
 				<div ng-if="table.$edit2[$index]"><input class="form-control" type="number" ng-model="value.title" /></div>
@@ -73,9 +75,9 @@
 			</td>
 			<td data-title="'Actions'">
 				<a ng-if="!table.$edit2[$index]" class="btn btn-default btn-xs" ng-click="table.$edit2[$index] = true">Edit</a>
-				<a ng-if="!table.$edit2[$index]" class="btn btn-default btn-xs">Delete</a>
-                		<a ng-if="table.$edit2[$index]" class="btn btn-primary btn-xs" ng-click="table.$edit2[$index] = false">Save</a>
-                		<a ng-if="table.$edit2[$index]" class="btn btn-default btn-xs" ng-click="table.$edit2[$index] = false">Cancel</a>
+				<a ng-if="!table.$edit2[$index]" class="btn btn-default btn-xs" ng-click="table.delete2($index)">Delete</a>
+                		<a ng-if="table.$edit2[$index]" class="btn btn-primary btn-xs" ng-click="table.$edit2[$index] = false; table.save2($index)">Save</a>
+                		<a ng-if="table.$edit2[$index]" class="btn btn-default btn-xs" ng-click="table.$edit2[$index] = false; table.cancel2($index)">Cancel</a>
 				<label class="switch switch-sm">
                                  <input type="checkbox">
                                  <span></span>

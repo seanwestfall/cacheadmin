@@ -1,5 +1,7 @@
 <?php
-function getMemcacheKeys($host = '127.0.0.1', $port = 11211){
+function getMemcacheKeys(){
+	$host = $_GET['ip'];
+	$port = (int) $_GET['port'];
         $mem = @fsockopen($host, $port);
         if($mem === FALSE) return -1;
  

@@ -1,6 +1,8 @@
 <?php
 $json = file_get_contents('php://input');
-$filename = "../../data/instances.json";
+$djson = json_decode($json);
+$name = $djson->instance . '_' . 'rules.json';
+$filename = "../../data/" . $name;
 $file = fopen( $filename, "w" );
 
 if( $file == false )
@@ -11,3 +13,4 @@ if( $file == false )
 fwrite( $file, $json );
 fclose( $file );
 ?>
+

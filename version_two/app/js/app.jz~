@@ -3110,7 +3110,7 @@ function AngularTableIBController($scope, $filter, ngTableParams, $http, flotOpt
 		  step_num++;
 	  }
 	}
-  })}, 1000); 
+  })}, 1000);
 
 function rainbow(numOfSteps, step) {
     var r, g, b;
@@ -3204,14 +3204,6 @@ function AngularTableSettingsController($scope, $filter, ngTableParams, $http, f
 	  var vm = this;
 	  vm.$edit = [];
 	  vm.$edit2 = [];
-	  	vm.rulesJson = [];
-
-		// init
-	  $http.get('data/'+$rootScope.selectedip+'_rules.json').then(function(data) {
-		console.log(data);
-		vm.rulesJson = JSON.parse(data.data.rules);
-	});
-
 
           vm.selectJson = $rootScope.selectJson;
 	  vm.tableParams = new ngTableParams({
@@ -3251,6 +3243,33 @@ function AngularTableSettingsController($scope, $filter, ngTableParams, $http, f
 	      }
 	  });
 
+	  vm.rules = [
+		{type: "replace",
+		 rule: '/\\d+/g',
+		 replace: '',
+		 order: 1
+		},
+		{type: "match",
+		 rule: 'credits',
+		 replace: 'credits*',
+		 order: 2
+		},
+		{type: "match",
+		 rule: 'pic_comments',
+		 replace: 'pic_comments*',
+		 order: 3
+		},
+		{type: "match",
+		 rule: 'w3tc_sean-current.www.modelmayhem.com__object',
+		 replace: 'w3tc_sean-current.www.modelmayhem.com__object*',
+		 order: 4
+		},
+		{type: "match",
+		 rule: 'w3tc_sean-current.www.modelmayhem.com__sql',
+		 replace: 'w3tc_sean-current.www.modelmayhem.com__sql*',
+		 order: 5
+		}
+	  ];
 	  vm.tableParams2 = new ngTableParams({
               page: 1,            // show first page
               count: vm.selectJson.length,
@@ -3281,7 +3300,7 @@ function AngularTableSettingsController($scope, $filter, ngTableParams, $http, f
 		vm.$edit[vm.selectJson.length-1] = true;
 	}
 	vm.addInstance2 = function() {
-		vm.rulesJson.push({
+		vm.rules.push({
 			type: '',
 			rule: '',
 			replace: '',
@@ -3310,21 +3329,6 @@ function AngularTableSettingsController($scope, $filter, ngTableParams, $http, f
 	vm.delete = function($index) {
 		vm.selectJson.splice($index,1);
 		$rootScope.selectJson.splice($index,1);
-	}
-	vm.delete2 = function($index) {
-		vm.rulesJson.splice($index,1);
-		$rootScope.selectJson.splice($index,1);
-	}
-	
-	vm.cancel = function($index) {
-		vm.selectJson.splice($index,1);
-	}
-	vm.cancel2 = function($index) {
-		vm.rulesJson.splice($index,1);
-	}
-	
-	vm.check = function($index) {
-		$http.get('app/php/check.php?');
 	}
 
 	vm.saveChanges = function() {
@@ -3363,14 +3367,15 @@ function AngularTableSettingsController($scope, $filter, ngTableParams, $http, f
 			      title: 'Success',
 			      text:  'Changes Saved!'
 			  };
-			    toaster.pop('success', 'Success', 'Memcached Instances Changes Saved!');
+			
+			    toaster.pop($scope.toaster.type, $scope.toaster.title, $scope.toaster.text);
+				console.log(toaster);
 		});
 	}
 	vm.saveChanges2 = function() {
 		$http.post('app/php/saverules.php', {instance: $rootScope.selectedip, rules: JSON.stringify(vm.rulesJson) }).
 		then(function(response) {
 			// toast
-			toaster.pop('success', 'Success', 'Rules Saved!');
 		});
 	
 	}
