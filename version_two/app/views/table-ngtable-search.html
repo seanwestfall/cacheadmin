@@ -8,9 +8,9 @@
                <div class="form-group">
                   <label for="input-id-1" class="col-sm-2 control-label">Retrieve</label>
 		  <div class="input-group">
-                        <input type="text" class="form-control" />
+                        <input type="text" class="form-control" ng-model="table.getkey" />
                         <span class="input-group-btn">
-                           <button type="button" class="btn btn-default">Go</button>
+                           <button type="button" class="btn btn-default" ng-click="table.getKey()">Go</button>
                         </span>
                   </div>
                </div>
@@ -28,6 +28,27 @@
          </form>
       </div>
    </div>
+  <div class="panel panel-default" ng-show="table.html">
+      <div class="panel-heading">
+         <div class="panel-title">Retrieval Result</div>
+      </div>
+      <table data-ng-table="table.tableParams2" class="table table-bordered table-striped">
+         <tbody>
+
+	<tr data-ng-show="table.html">
+		<td>
+		<pre ng-bind-html="table.html">
+		</pre>
+		<div class="floatright_container">
+<button type="button" class="mr btn btn-square btn-default" ng-click="table.closeGetKey()">Close</button>
+<button type="button" class="mr btn btn-square btn-danger" ng-click="table.deleteGetKey()">Delete</button>
+		</div>
+		<td>
+	</tr>
+         </tbody>
+      </table>
+	
+  </div>
   <div class="panel panel-default">
       <div class="panel-heading">
          <button data-ng-click="table.tableParams.sorting({})" class="pull-right btn btn-default btn-sm">Clear sorting</button>

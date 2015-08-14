@@ -1,4 +1,4 @@
 <?php
 $m = new Memcached();
-$m->addServer('localhost', 11211);
+$m->addServer($_GET['ip'],$_GET['port']);
 $m->delete($_GET['key']);

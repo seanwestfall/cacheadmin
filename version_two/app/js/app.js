@@ -2842,13 +2842,17 @@ function AngularSlabTableIBController($scope, $filter, ngTableParams, $http, $st
 
 	vm.slabdetails = $rootScope.slabdata['STAT ' + id];
 
+	  $http.get('data/'+$rootScope.selectedip+'_rules.json').then(function(data) {
+		vm.rulesJson = JSON.parse(data.data.rules);
+		console.log(vm.rulesJson);
+	});
+
 	vm.currentSlabDumpId = "Slab " + id;
 	$scope.currentSlabDumpId = "Slab " + id;
 	vm.slabdump = {};
 	vm.averageKeys = {};
 	vm.totalOcc = 0;
 	vm.totalSize = 0;
-	console.log($rootScope);
 	$http.get('app/php/dumpslab.php?ip=' + $rootScope.selectedip + '&port=' + $rootScope.selectedport + '&slabid=' + id).then(function(data) {
 		for(var key in data.data) {
 			if (!vm.slabdump[key]) {
@@ -2860,8 +2864,13 @@ function AngularSlabTableIBController($scope, $filter, ngTableParams, $http, $st
 			// check for special cases
 			var keyTemp = "";
 			var bSpecial = false;
-			if(arrItem[1].substring(0,7)=="credits") bSpecial = true;
-			if(arrItem[1].substring(0,12)=="pic_comments") bSpecial = true;
+
+			vm.rulesJson.forEach(function(n) {
+				if(n.type=="match" && arrItem[1].substring(0,n.rule.length)==n.rule) {
+					bSpecial = true;	
+				}
+			});
+
 			if(!bSpecial) {
 				keyTemp = arrItem[1].replace(/\d+/g,'');
 				if(!vm.averageKeys[keyTemp]){
@@ -2872,8 +2881,11 @@ function AngularSlabTableIBController($scope, $filter, ngTableParams, $http, $st
 
 				}
 			} else {
-				if(arrItem[1].substring(0,7)=="credits") keyTemp = "*credits";
-				if(arrItem[1].substring(0,12)=="pic_comments") keyTemp = "*pic_comments";
+				vm.rulesJson.forEach(function(n) {
+					if(n.type=="match" && arrItem[1].substring(0,n.rule.length)==n.rule) {
+						keyTemp = n.replace;
+					}
+				});
 				if(!vm.averageKeys[keyTemp]) {
 					vm.averageKeys[keyTemp] = {};
 					vm.averageKeys[keyTemp].name = keyTemp;
@@ -2948,6 +2960,11 @@ function AngularSlabTableIBController($scope, $filter, ngTableParams, $http, $st
 
 	vm.closeKey = function(index) {
 		vm.slabdump[index].html = null;
+	}
+	vm.deleteKey = function(index) {
+		$http.get('app/php/deleteKey.php?ip=' + $rootScope.selectedip + '&port=' + $rootScope.selectedport + '&key=' + vm.slabdump[index].key).then(function(data) {
+			delete vm.slabdump[index];
+		});
 	}
 
 }
@@ -3139,6 +3156,16 @@ function AngularTableSearchController($scope, $filter, ngTableParams, $http, flo
 
 vm.count = 0;
 vm.slabdump = {};
+vm.getkey = null;
+vm.html = null;
+
+	vm.getKey = function() {
+			$http.get('app/php/getValue.php?ip=' + $rootScope.selectedip + '&port=' + $rootScope.selectedport + '&key=' + vm.getkey).then(function(data) {
+				vm.html = $sce.trustAsHtml(data.data);
+			});
+		
+	}
+
   vm.searchKey = function() {
 	var term = vm.key + "+";
 	var re = new RegExp(term);
@@ -3195,6 +3222,24 @@ vm.slabdump = {};
 		  }
 	}
 
+	vm.closeGetKey = function() {
+		vm.html = null;
+	}
+	vm.closeKey = function(index) {
+		vm.slabdump[index].html = null;
+	}
+
+	vm.deleteGetKey = function() {
+		$http.get('app/php/deleteKey.php?ip=' + $rootScope.selectedip + '&port=' + $rootScope.selectedport + '&key=' + vm.getkey).then(function(data) {
+			vm.html = null;
+		});
+	}
+
+	vm.deleteKey = function(index) {
+		$http.get('app/php/deleteKey.php?ip=' + $rootScope.selectedip + '&port=' + $rootScope.selectedport + '&key=' + vm.slabdump[index].key).then(function(data) {
+			delete vm.slabdump[index];
+		});
+	}
 }
 AngularTableSearchController.$inject = ["$scope", "$filter", "ngTableParams", "$http", "flotOptions", "colors", "$rootScope", "$sce"];
 
@@ -3208,7 +3253,6 @@ function AngularTableSettingsController($scope, $filter, ngTableParams, $http, f
 
 		// init
 	  $http.get('data/'+$rootScope.selectedip+'_rules.json').then(function(data) {
-		console.log(data);
 		vm.rulesJson = JSON.parse(data.data.rules);
 	});
 
@@ -3285,9 +3329,10 @@ function AngularTableSettingsController($scope, $filter, ngTableParams, $http, f
 			type: '',
 			rule: '',
 			replace: '',
-			order: ''
+			order: '',
+			set: true
 		});
-		vm.$edit[vm.selectJson.length-1] = true;
+		vm.$edit2[vm.rulesJson.length-1] = true;
 	}
 
 	vm.setDefault = function($index) {
@@ -3304,6 +3349,9 @@ function AngularTableSettingsController($scope, $filter, ngTableParams, $http, f
 	}
 
 	vm.save = function($index) {
+		$rootScope.selectJson[$index] = vm.selectJson[$index];
+	}
+	vm.save2 = function($index) {
 		$rootScope.selectJson[$index] = vm.selectJson[$index];
 	}
 	
@@ -3325,6 +3373,10 @@ function AngularTableSettingsController($scope, $filter, ngTableParams, $http, f
 	
 	vm.check = function($index) {
 		$http.get('app/php/check.php?');
+	}
+
+	vm.onoff = function($index) {
+		
 	}
 
 	vm.saveChanges = function() {
