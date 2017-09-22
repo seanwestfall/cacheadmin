@@ -6,10 +6,10 @@ A client side web app to monitor and manage the cache layer of common Internet B
 
 ### Version 2
 #### Cache Overview
-![GitHub Logo](screenshots/cacheadmin-overview.png)
+![Cacheadmin Overview](screenshots/cacheadmin-overview.png)
 
 #### Cache Search
-![GitHub Logo](screenshots/cacheadmin-search.png)
+![Cacheadmin Search](screenshots/cacheadmin-search.png)
 
 
 ### Version 1
